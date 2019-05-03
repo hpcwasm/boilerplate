@@ -6,3 +6,4 @@ vtk/
 boost/
 emsdk/
 llvm/
+hpcwasm/

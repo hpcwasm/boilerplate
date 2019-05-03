@@ -1,26 +1,34 @@
-# buil vtk with emscripten
-https://gitlab.kitware.com/vtk/vtk/commit/a0147e5f1287871628e11f5c67c17f58f1fd02be
+#!/bin/bash
 
-```bash
-export HPCWASM_BASE_DIR=/home/manstetten/ProgramsDev/hpcwasm
-export HPCWASM_BASE_DIR_VTK=$HPCWASM_BASE_DIR/vtk
+print_status(){
+  echo "[ STATUS ] $1"
+}
 
-# for emscripten
-export HPCWASM_BASE_DIR_EMSDK=$HPCWASM_BASE_DIR/emsdk
-export EM_CONFIG=$HPCWASM_BASE_DIR_EMSDK/.emscripten
-source $HPCWASM_BASE_DIR_EMSDK/emsdk_env.sh
-```
+if [[ $# -eq 0 ]] ; then
+    export HPCWASM_BASE_DIR=`pwd`/hpcwasm
+else
+    export HPCWASM_BASE_DIR=$1
+fi
 
-```bash
-mkdir -p $HPCWASM_BASE_DIR_VTK
-cd $HPCWASM_BASE_DIR_VTK
+mkdir -p $HPCWASM_BASE_DIR
 
-source $HPCWASM_BASE_DIR_EMSDK/emsdk_env.sh
+print_status "Setting Up Paths"
+export EM_CONFIG=$HPCWASM_BASE_DIR/emsdk/.emscripten
+source $HPCWASM_BASE_DIR/emsdk/emsdk_env.sh
+
+
+print_status "Getting vtk"
+mkdir -p $HPCWASM_BASE_DIR/vtk
+cd $HPCWASM_BASE_DIR/vtk
+
+source $HPCWASM_BASE_DIR/emsdk/emsdk_env.sh
 
 wget "http://www.vtk.org/files/release/8.1/VTK-8.1.2.tar.gz" && tar -xvf "VTK-8.1.2.tar.gz" --strip-components=1
-mkdir buildwasm
+
+print_status "Setting up VTK-build"
+mkdir -p buildwasm
 cd buildwasm
-emcmake cmake   -DCMAKE_INSTALL_PREFIX=$HPCWASM_BASE_DIR_VTK/install \
+emcmake cmake   -DCMAKE_INSTALL_PREFIX=$HPCWASM_BASE_DIR/install/vtk \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=OFF \
         -DBUILD_EXAMPLES=OFF \
@@ -38,9 +46,13 @@ emcmake cmake   -DCMAKE_INSTALL_PREFIX=$HPCWASM_BASE_DIR_VTK/install \
         -DModule_vtkFiltersGeometry=ON \
         -DModule_vtkFiltersImaging=ON \
         -DVTK_HAVE_GETSOCKNAME_WITH_SOCKLEN_T=ON \
+        -DCMAKE_C_FLAGS="-Wno-implicit-function-declaration" \
         ..
-make -j4
-make install
-# add: -Wno-implicit-function-declaration to CMAKE_C_FLAGS to avoid error on arc4random() implicit C99
 
-```
+print_status "Building vtk"
+make -j4
+
+print_status "Installing vtk"
+make install
+
+print_status "Finished"
