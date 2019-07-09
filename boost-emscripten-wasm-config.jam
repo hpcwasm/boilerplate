@@ -47,7 +47,7 @@ using clang : emscripten
       <ranlib>${HPCWASM_BIN_DIR_EMSCRIPTEN}/emranlib
       <linker>${HPCWASM_BIN_DIR_EMSCRIPTEN}/emlink
       <cxxflags>-std=c++11 
-      <linkflags>--no-threads -v -s ERROR_ON_UNDEFINED_SYMBOLS=0 -s WASM=1 -s TOTAL_MEMORY=1073676288 -s WASM_MEM_MAX=1073676288 -s \"BINARYEN_METHOD='native-wasm'\" -s \"BINARYEN_TRAP_MODE='allow'\"
+      <linkflags>--no-threads -v -s ERROR_ON_UNDEFINED_SYMBOLS=0 -s WASM=1 -s TOTAL_MEMORY=1073676288 -s WASM_MEM_MAX=1073676288
 ;
 
 import type : change-generated-target-suffix ;
