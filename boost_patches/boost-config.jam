@@ -40,14 +40,17 @@ option.set includedir : /usr/local/include ;
 # Stop on first error
 option.set keep-going : false ;
 
+import os ;
+local wasmroot = [ os.environ WASM_ROOT ] ;
+
 using clang : emscripten
   : emcc
-  :   <root>${HPCWASM_BIN_DIR_EMSCRIPTEN}
-      <archiver>${HPCWASM_BIN_DIR_EMSCRIPTEN}/emar
-      <ranlib>${HPCWASM_BIN_DIR_EMSCRIPTEN}/emranlib
-      <linker>${HPCWASM_BIN_DIR_EMSCRIPTEN}/emlink
-      <cxxflags>-std=c++11 
-      <linkflags>--no-threads -v -s ERROR_ON_UNDEFINED_SYMBOLS=0 -s WASM=1 -s TOTAL_MEMORY=1073676288 -s WASM_MEM_MAX=1073676288
+  :   <root>$(wasmroot)/emsdk/upstream/emscripten
+      <archiver>$(wasmroot)/emsdk/upstream/emscripten/emar
+      <ranlib>$(wasmroot)/emsdk/upstream/emscripten/emranlib
+      <linker>$(wasmroot)/emsdk/upstream/emscripten/emlink
+      <cxxflags>
+      <linkflags>
 ;
 
 import type : change-generated-target-suffix ;

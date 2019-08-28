@@ -1,9 +1,5 @@
-js/
-jsc/
-ch/
-v8/
-vtk/
-boost/
-emsdk/
-llvm/
-hpcwasm/
+/boost/
+/emsdk/
+/llvm/
+/tbb/
+/vtk/
